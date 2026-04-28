@@ -42,6 +42,7 @@ $fav_team = $_SESSION['favorite_team'];
                 <p>Favorite Team: <strong><?php echo $fav_team ? $fav_team : 'None selected'; ?></strong></p>
             </div>
             <div class="nav-links">
+                <a href="favorites.php" class="btn">Favorited Games</a>
                 <a href="search.php" class="btn">Search Database</a>
                 <a href="?logout=true" class="btn btn-danger">Log Out</a>
             </div>

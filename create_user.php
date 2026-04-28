@@ -10,8 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = trim($_POST['password']);
     $favorite_team = trim($_POST['favorite_team']);
 
-    if ($username === '' || $password === '') {
-        $error = "Username and password are required.";
+    if ($username === '' || $password === '' || $favorite_team === '') {
+        $error = "Username, password, and favorite team are required.";
     } else {
         $check_query = "SELECT Username FROM Users WHERE Username = '" . mysqli_real_escape_string($conn, $username) . "'";
         $check_result = mysqli_query($conn, $check_query);
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $p = mysqli_real_escape_string($conn, $password);
             $t = mysqli_real_escape_string($conn, $favorite_team);
 
-            if ($t === '') {
+            if ($favorite_team === 'None') {
                 $insert_query = "INSERT INTO Users (Username, Password, FavoriteTeam) VALUES ('$u', '$p', NULL)";
             } else {
                 $insert_query = "INSERT INTO Users (Username, Password, FavoriteTeam) VALUES ('$u', '$p', '$t')";
@@ -65,8 +65,9 @@ $teams_result = mysqli_query($conn, "SELECT TeamName FROM Teams ORDER BY TeamNam
         <form method="POST">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <select name="favorite_team">
-                <option value="">-- Select Favorite Team (optional) --</option>
+            <select name="favorite_team" required>
+                <option value="" disabled selected>-- Select Favorite Team --</option>
+                <option value="None">None</option>
                 <?php
                 if ($teams_result) {
                     while ($team = mysqli_fetch_assoc($teams_result)) {
