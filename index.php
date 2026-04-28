@@ -38,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         button { width: 100%; padding: 10px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
         button:hover { background-color: #004494; }
         .error { color: red; font-size: 14px; margin-bottom: 10px; }
+        .create-btn { display: block; width: 100%; padding: 10px; margin-top: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-decoration: none; box-sizing: border-box; }
+        .create-btn:hover { background-color: #1e7e34; }
     </style>
 </head>
 <body>
@@ -49,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Log In</button>
         </form>
+        <a href="create_user.php" class="create-btn">Create New User</a>
     </div>
 </body>
 </html>
