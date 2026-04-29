@@ -30,28 +30,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Football Project Login</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 300px; text-align: center; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #004494; }
-        .error { color: red; font-size: 14px; margin-bottom: 10px; }
-        .create-btn { display: block; width: 100%; padding: 10px; margin-top: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-decoration: none; box-sizing: border-box; }
-        .create-btn:hover { background-color: #1e7e34; }
-    </style>
+    <title>NFL Database Login</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="brand">
+        <img src="https://upload.wikimedia.org/wikipedia/en/a/a2/National_Football_League_logo.svg" alt="NFL Logo">
+        <h1>NFL Database</h1>
+    </div>
     <div class="login-card">
-        <h2>System Login</h2>
+        <h2>User Login</h2>
         <?php if ($error) echo "<div class='error'>$error</div>"; ?>
         <form method="POST">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Log In</button>
+            <button type="submit" class="btn">Log In</button>
         </form>
-        <a href="create_user.php" class="create-btn">Create New User</a>
+        <a href="create_user.php" class="btn btn-success">Create New User</a>
     </div>
 </body>
 </html>

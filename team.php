@@ -33,29 +33,15 @@ if ($team_name !== '') {
 <html>
 <head>
     <title><?php echo $team ? htmlspecialchars($team['TeamName']) : 'Team Not Found'; ?></title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 40px; color: #333; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .nav-links { display: flex; gap: 10px; align-items: center; }
-        a.btn { padding: 8px 15px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; }
-        a.btn-primary { background-color: #0056b3; }
-        a.btn-primary:hover { background-color: #004494; }
-        .info { background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #28a745; color: white; }
-        tr:hover { background-color: #f1f1f1; }
-        .empty { color: #888; font-style: italic; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h2><?php echo $team ? htmlspecialchars($team['TeamName']) : 'Team Not Found'; ?></h2>
             <div class="nav-links">
-                <a href="search.php" class="btn">&larr; Back to Search</a>
-                <a href="dashboard.php" class="btn">Dashboard</a>
+                <a href="search.php" class="btn btn-secondary">&larr; Back to Search</a>
+                <a href="dashboard.php" class="btn btn-secondary">Dashboard</a>
             </div>
         </div>
 
@@ -63,7 +49,7 @@ if ($team_name !== '') {
             <div class="info">
                 <p><strong>Division:</strong> <?php echo htmlspecialchars($team['Division']); ?></p>
                 <p>
-                    <a class="btn btn-primary" href="search.php?q=<?php echo urlencode($team['TeamName']); ?>&filter=games">Games</a>
+                    <a class="btn" href="search.php?q=<?php echo urlencode($team['TeamName']); ?>&filter=games">Games</a>
                 </p>
             </div>
 

@@ -45,17 +45,7 @@ $teams_result = mysqli_query($conn, "SELECT TeamName FROM Teams ORDER BY TeamNam
 <html>
 <head>
     <title>Create New User</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 320px; text-align: center; }
-        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #1e7e34; }
-        .error { color: red; font-size: 14px; margin-bottom: 10px; }
-        .success { color: #155724; background-color: #d4edda; padding: 8px; border-radius: 4px; font-size: 14px; margin-bottom: 10px; }
-        .back-link { display: block; margin-top: 15px; color: #0056b3; text-decoration: none; font-size: 14px; }
-        .back-link:hover { text-decoration: underline; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="login-card">
@@ -77,9 +67,9 @@ $teams_result = mysqli_query($conn, "SELECT TeamName FROM Teams ORDER BY TeamNam
                 }
                 ?>
             </select>
-            <button type="submit">Create Account</button>
+            <button type="submit" class="btn btn-success">Create Account</button>
         </form>
-        <a href="index.php" class="back-link">&larr; Back to Login</a>
+        <a href="index.php" class="btn btn-secondary">&larr; Back to Login</a>
     </div>
 </body>
 </html>

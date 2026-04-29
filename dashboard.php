@@ -29,33 +29,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['favorite_game'])) {
         mysqli_query($conn, $insert_fav);
     }
 }
+
+// Handle Change Favorite Team
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_favorite_team'])) {
+    $new_team = trim($_POST['favorite_team']);
+    $safe_user = mysqli_real_escape_string($conn, $username);
+
+    if ($new_team === 'None' || $new_team === '') {
+        $update_sql = "UPDATE Users SET FavoriteTeam = NULL WHERE Username = '$safe_user'";
+        mysqli_query($conn, $update_sql);
+        $_SESSION['favorite_team'] = null;
+        $fav_team = null;
+    } else {
+        $safe_team = mysqli_real_escape_string($conn, $new_team);
+        $update_sql = "UPDATE Users SET FavoriteTeam = '$safe_team' WHERE Username = '$safe_user'";
+        mysqli_query($conn, $update_sql);
+        $_SESSION['favorite_team'] = $new_team;
+        $fav_team = $new_team;
+    }
+}
+
+$teams_for_dropdown = mysqli_query($conn, "SELECT TeamName FROM teams ORDER BY TeamName ASC");
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Football Stats Dashboard</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 40px; color: #333; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .nav-links { display: flex; gap: 10px; align-items: center; }
-        a.btn, button.btn-fav { padding: 8px 15px; background-color: #0056b3; color: white; text-decoration: none; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; }
-        a.btn-danger { background-color: #dc3545; }
-        a.btn-success { background-color: #28a745; }
-        button.btn-fav:hover { background-color: #004494; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #0056b3; color: white; }
-        tr:hover { background-color: #f1f1f1; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div>
                 <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2>
-                <p>Favorite Team: <strong><?php echo $fav_team ? htmlspecialchars($fav_team) : 'None selected'; ?></strong></p>
+                <p>
+                    Favorite Team: <strong><?php echo $fav_team ? htmlspecialchars($fav_team) : 'None selected'; ?></strong>
+                    <details class="fav-team-toggle">
+                        <summary>Change Favorite Team</summary>
+                        <form method="POST" class="fav-team-form">
+                            <select name="favorite_team">
+                                <option value="None" <?php if (!$fav_team) echo 'selected'; ?>>None</option>
+                                <?php
+                                if ($teams_for_dropdown) {
+                                    while ($t = mysqli_fetch_assoc($teams_for_dropdown)) {
+                                        $name = htmlspecialchars($t['TeamName']);
+                                        $sel = ($fav_team === $t['TeamName']) ? 'selected' : '';
+                                        echo "<option value=\"$name\" $sel>$name</option>";
+                                    }
+                                }
+                                ?>
+                            </select>
+                            <button type="submit" name="change_favorite_team" class="btn">Save</button>
+                        </form>
+                    </details>
+                </p>
             </div>
             <div class="nav-links">
                 <a href="favorites.php" class="btn btn-success">My Favorites</a>
@@ -85,18 +113,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['favorite_game'])) {
 
             if ($result) {
                 while ($row = mysqli_fetch_assoc($result)) {
-                    $matchup = $row['AwayTeam'] . " @ " . $row['HomeTeam'];
+                    $matchup = htmlspecialchars($row['AwayTeam']) . " @ " . htmlspecialchars($row['HomeTeam']);
+                    $gameLink = "game.php?id=" . urlencode($row['GameID']);
                     $isFav = ($row['HomeTeam'] == $fav_team || $row['AwayTeam'] == $fav_team) ? 'style="background-color: #e6f2ff;"' : '';
                     
                     echo "<tr $isFav>
                             <td>{$row['GameDate']}</td>
-                            <td>{$matchup}</td>
+                            <td><a href='{$gameLink}'>{$matchup}</a></td>
                             <td>" . ($row['Winner'] ? $row['Winner'] : 'TBD') . "</td>
                             <td>" . ($row['StadiumName'] ? $row['StadiumName'] : 'TBD') . "</td>
                             <td>
                                 <form method='POST' style='margin:0;'>
                                     <input type='hidden' name='game_id' value='{$row['GameID']}'>
-                                    <button type='submit' name='favorite_game' class='btn-fav'>Favorite</button>
+                                    <button type='submit' name='favorite_game' class='btn'>Favorite</button>
                                 </form>
                             </td>
                           </tr>";

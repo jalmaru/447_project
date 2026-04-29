@@ -19,26 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['remove_favorite'])) {
 <html>
 <head>
     <title>Favorited Games</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 40px; color: #333; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .nav-links { display: flex; gap: 10px; align-items: center; }
-        a.btn, button.btn-danger { padding: 8px 15px; background-color: #0056b3; color: white; text-decoration: none; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; }
-        button.btn-danger { background-color: #dc3545; }
-        button.btn-danger:hover { background-color: #c82333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #28a745; color: white; }
-        tr:hover { background-color: #f1f1f1; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h2>Favorited Games</h2>
             <div class="nav-links">
-                <a href="dashboard.php" class="btn">&larr; Back to Dashboard</a>
+                <a href="dashboard.php" class="btn btn-secondary">&larr; Back to Dashboard</a>
             </div>
         </div>
 
@@ -73,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['remove_favorite'])) {
                             <td>
                                 <form method='POST' style='margin:0;'>
                                     <input type='hidden' name='game_id' value='{$row['GameID']}'>
-                                    <button type='submit' name='remove_favorite' class='btn-danger'>Remove</button>
+                                    <button type='submit' name='remove_favorite' class='btn btn-danger'>Remove</button>
                                 </form>
                             </td>
                           </tr>";
