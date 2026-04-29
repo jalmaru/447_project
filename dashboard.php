@@ -101,8 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['favorite_game'])) {
                             </td>
                           </tr>";
                 }
-            } else {
-                echo "<tr><td colspan='5'>No games found or error in query.</td></tr>";
             }
             ?>
         </table>

@@ -20,10 +20,12 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
         $res = mysqli_query($conn, $sql);
         if ($res) {
             while ($row = mysqli_fetch_assoc($res)) {
+                $teamName = htmlspecialchars($row['TeamName']);
+                $teamLink = "team.php?name=" . urlencode($row['TeamName']);
                 $results[] = [
                     'Type' => 'Team',
-                    'Primary' => "<strong>{$row['TeamName']}</strong>",
-                    'Secondary' => "Division: {$row['Division']}"
+                    'Primary' => "<a href=\"$teamLink\"><strong>$teamName</strong></a>",
+                    'Secondary' => "Division: " . htmlspecialchars($row['Division'])
                 ];
             }
         }
@@ -39,10 +41,14 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
         $res = mysqli_query($conn, $sql);
         if ($res) {
             while ($row = mysqli_fetch_assoc($res)) {
+                $playerName = htmlspecialchars($row['PlayerName']);
+                $position = htmlspecialchars($row['Position']);
+                $teamName = htmlspecialchars($row['TeamName']);
+                $teamLink = "team.php?name=" . urlencode($row['TeamName']);
                 $results[] = [
                     'Type' => 'Player',
-                    'Primary' => "<strong>{$row['PlayerName']}</strong> ({$row['Position']})",
-                    'Secondary' => "Team: {$row['TeamName']}"
+                    'Primary' => "<strong>$playerName</strong> ($position)",
+                    'Secondary' => "Team: <a href=\"$teamLink\">$teamName</a>"
                 ];
             }
         }
@@ -66,7 +72,7 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
     // 4. Search Games
     if ($filter == 'all' || $filter == 'games') {
         $sql = "
-            SELECT g.GameDate, g.HomeTeam, g.AwayTeam, s.StadiumName
+            SELECT g.GameID, g.GameDate, g.HomeTeam, g.AwayTeam, s.StadiumName
             FROM game g
             LEFT JOIN stadium s ON g.StadiumID = s.StadiumID
             WHERE g.HomeTeam LIKE '%$search_query%' OR g.AwayTeam LIKE '%$search_query%'
@@ -74,31 +80,15 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
         $res = mysqli_query($conn, $sql);
         if ($res) {
             while ($row = mysqli_fetch_assoc($res)) {
-                $stadium = $row['StadiumName'] ? $row['StadiumName'] : 'TBD';
+                $stadium = $row['StadiumName'] ? htmlspecialchars($row['StadiumName']) : 'TBD';
+                $home = htmlspecialchars($row['HomeTeam']);
+                $away = htmlspecialchars($row['AwayTeam']);
+                $date = htmlspecialchars($row['GameDate']);
+                $gameLink = "game.php?id=" . urlencode($row['GameID']);
                 $results[] = [
                     'Type' => 'Game',
-                    'Primary' => "<strong>{$row['AwayTeam']} @ {$row['HomeTeam']}</strong>",
-                    'Secondary' => "Date: {$row['GameDate']} | Stadium: {$stadium}"
-                ];
-            }
-        }
-    }
-
-    // 5. Search Box Scores
-    if ($filter == 'all' || $filter == 'stats') {
-        $sql = "
-            SELECT gs.TeamName, gs.TotalPoints, gs.PassingYards, gs.RushingYards, gs.TurnoversForced, g.GameDate
-            FROM gamestats gs
-            JOIN game g ON gs.GameID = g.GameID
-            WHERE gs.TeamName LIKE '%$search_query%'
-        ";
-        $res = mysqli_query($conn, $sql);
-        if ($res) {
-            while ($row = mysqli_fetch_assoc($res)) {
-                $results[] = [
-                    'Type' => 'Box Score',
-                    'Primary' => "<strong>{$row['TeamName']}</strong> (Game: {$row['GameDate']})",
-                    'Secondary' => "Points: {$row['TotalPoints']} | Pass Yds: {$row['PassingYards']} | Rush Yds: {$row['RushingYards']} | TO Forced: {$row['TurnoversForced']}"
+                    'Primary' => "<a href=\"$gameLink\"><strong>$away @ $home</strong></a>",
+                    'Secondary' => "Date: $date | Stadium: $stadium"
                 ];
             }
         }
@@ -109,7 +99,7 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Omni-Search Database</title>
+    <title>Search Database</title>
     <style>
         /* (Keep your existing search.php CSS here) */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 40px; color: #333; }
@@ -131,12 +121,14 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
         .badge-stadium { background-color: #e83e8c; }
         .badge-game { background-color: #ffc107; color: #333; }
         .badge-box { background-color: #fd7e14; }
+        td a { color: #0056b3; text-decoration: none; }
+        td a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h2>Omni-Search Database</h2>
+            <h2>Search Database</h2>
             <a href="dashboard.php" class="btn">Back to Dashboard</a>
         </div>
 
@@ -147,7 +139,6 @@ if (isset($_GET['q']) && !empty($_GET['q'])) {
                 <option value="players" <?php if($filter == 'players') echo 'selected'; ?>>Players</option>
                 <option value="stadiums" <?php if($filter == 'stadiums') echo 'selected'; ?>>Stadiums</option>
                 <option value="games" <?php if($filter == 'games') echo 'selected'; ?>>Games</option>
-                <option value="stats" <?php if($filter == 'stats') echo 'selected'; ?>>Box Scores</option>
             </select>
             <input type="text" name="q" placeholder="Search parameters..." value="<?php echo htmlspecialchars($search_query); ?>" required>
             <button type="submit">Search</button>
